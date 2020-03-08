@@ -3,14 +3,16 @@ using System;
 using HomeAutomata.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HomeAutomata.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200308171906_WetherLog")]
+    partial class WetherLog
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,31 +89,11 @@ namespace HomeAutomata.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("HomeAutomata.Core.Domain.HeatPumpModels.HeatPumpTemp", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<double>("Kwh")
-                        .HasColumnType("double");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("HeatPumpTemp");
-                });
-
             modelBuilder.Entity("HomeAutomata.Core.Domain.Weather.OutsideWeather", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<double>("FeelsLike")
                         .HasColumnType("double");

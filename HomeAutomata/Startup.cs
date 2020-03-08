@@ -2,7 +2,12 @@ using Hangfire;
 using Hangfire.MemoryStorage;
 using Hangfire.MySql;
 using HomeAutomata.Data;
+using HomeAutomata.Data.Repositories;
+using HomeAutomata.Data.Services;
+using HomeAutomata.Hangfire.RecurringJobs;
+using HomeAutomata.Services.HeatPump;
 using HomeAutomata.Services.HttpServices.Weather;
+using HomeAutomata.Services.Weather;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +34,11 @@ namespace HomeAutomata
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<AppDbContext>(o =>
+                o.UseMySql(
+                    Configuration.GetConnectionString("DefaultConnection"),
+                    sql => sql.ServerVersion(new ServerVersion(new Version(10, 3, 22), ServerType.MariaDb))));
+
             if (Environment.IsDevelopment())
             {
                 services.AddDbContext<AppDbContext>(o => o.UseInMemoryDatabase("data.db"));
@@ -61,7 +71,14 @@ namespace HomeAutomata
                     })));
             }
 
+            services.AddScoped(typeof(IRepo<>), typeof(BaseRepo<>));
+            services.AddScoped(typeof(ICrudService<>), typeof(CrudService<>));
+
             services.AddHttpClient<IWeatherService, WeatherService>();
+            services.AddScoped<IOutsideWeatherService, OutsideWeatherService>();
+
+            services.AddScoped<ILogOutsideWeatherJob, LogOutsideWeatherJob>();
+            services.AddScoped<IHeatPumpService, HeatPumpService>();
 
             services.AddHangfireServer();
 
@@ -80,7 +97,7 @@ namespace HomeAutomata
 
             app.UseHangfireDashboard();
 
-            RecurringJob.AddOrUpdate(() => Console.WriteLine("Horly Job"), Cron.Hourly, TimeZoneInfo.Local);
+            RecurringJob.AddOrUpdate<ILogOutsideWeatherJob>(j => j.LogWeather(), Cron.Hourly, TimeZoneInfo.Local);
 
             app.UseEndpoints(endpoints =>
             {

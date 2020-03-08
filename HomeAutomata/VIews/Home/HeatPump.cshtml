@@ -1,0 +1,34 @@
+﻿@using HomeAutomata.ViewModels.Home
+@model HeatPumpTempsVM
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div>
+    <a asp-action="AddPumpData">ΝΕΑ ΚΑΤΑΧΩΡΗΣΗ</a>
+</div>
+<div>
+    <table border="1">
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.HeatPumpTemps.Count > 0)
+            {
+                foreach (var pump in Model.HeatPumpTemps.OrderByDescending(d => d.Date))
+                {
+                    <tr>
+                        <td>@pump.Date</td>
+                        <td>@pump.Kwh</td>
+                        <td><a asp-action="UpdatePumpData" asp-route-id="@pump.Id">ΜΕΤΑΒΟΛΗ</a></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
