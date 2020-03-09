@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <Folder Include="Framework\" />
+    <Folder Include="wwwroot\css\" />
   </ItemGroup>
 
   <ItemGroup>

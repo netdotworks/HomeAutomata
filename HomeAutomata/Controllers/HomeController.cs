@@ -1,15 +1,13 @@
 ﻿using HomeAutomata.Core.Domain.HeatPumpModels;
-using HomeAutomata.Core.Domain.Weather;
 using HomeAutomata.Services.HeatPump;
 using HomeAutomata.Services.HttpServices.Weather;
 using HomeAutomata.Services.Weather;
 using HomeAutomata.ViewModels.Home;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.NetworkInformation;
-using System.Threading.Tasks;
 
 namespace HomeAutomata.Controllers
 {
@@ -18,14 +16,17 @@ namespace HomeAutomata.Controllers
         private readonly IWeatherService _weather;
         private readonly IOutsideWeatherService _service;
         private readonly IHeatPumpService _pumpService;
+        private readonly ILogger<HomeController> _logger;
 
         public HomeController(IWeatherService weatherService,
                               IOutsideWeatherService outside,
-                              IHeatPumpService heatPumpService)
+                              IHeatPumpService heatPumpService,
+                              ILogger<HomeController> logger)
         {
             _weather = weatherService;
             _service = outside;
             _pumpService = heatPumpService;
+            _logger = logger;
         }
 
         private void PrepareHeatPumpTempsModel(HeatPumpTempsVM model, IEnumerable<HeatPumpTemp> temps)
@@ -74,21 +75,31 @@ namespace HomeAutomata.Controllers
         [HttpGet]
         public IActionResult AddPumpData()
         {
-            return View();
+            var model = new HeatPumpTempVM();
+            return View(model);
         }
 
         [HttpPost]
         public IActionResult AddPumpData(HeatPumpTempVM model)
         {
+            _logger.LogError($"Modelstate is: {ModelState.IsValid}");
             if (ModelState.IsValid)
             {
-                var data = new HeatPumpTemp
+                try
                 {
-                    Date = DateTime.Now,
-                    Kwh = model.Kwh
-                };
+                    var data = new HeatPumpTemp
+                    {
+                        Date = DateTime.Now,
+                        Kwh = model.Kwh
+                    };
 
-                var result = _pumpService.Add(data);
+                    var result = _pumpService.Add(data);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, ex.Message);
+                    throw;
+                }
 
                 return RedirectToAction(nameof(HeatPump));
             }

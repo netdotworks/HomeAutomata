@@ -7,27 +7,48 @@
 
 }
 
-<div>
-    <table>
-        <thead>
-            <tr>
-                <th>Temperature</th>
-                <th>FeelsLike</th>
-                <th>Humidity</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model.Count() > 0)
-            {
-                foreach (var item in Model)
-                {
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-12">
+                <h1>ΕΞΩΤΕΡΙΚΗ ΘΕΡΜΟΚΡΑΣΙΑ</h1>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<section class="content">
+    <div class="card card-primary card-outline">
+        <div class="card-body">
+            <table class="table table-bordered table-striped">
+                <thead>
                     <tr>
-                        <td>@item.Temperature</td>
-                        <td>@item.FeelsLike</td>
-                        <td>@item.Humidity</td>
+                        <th>ΘΕΡΜΟKΡΑΣΙΑ</th>
+                        <th>FeelsLike</th>
+                        <th>ΥΓΡΑΣΙΑ</th>
+                        <th>ΗΜΕΡΟΜΗΝΙΑ</th>
                     </tr>
-                }
-            }
-        </tbody>
-    </table>
-</div>
+                </thead>
+                <tbody>
+                    @if (Model.Count() > 0)
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Temperature</td>
+                                <td>@item.FeelsLike</td>
+                                <td>@item.Humidity</td>
+                                <td>@item.Date.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/lib/admin-lte/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/lib/admin-lte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/app.datatables.js"></script>
+}

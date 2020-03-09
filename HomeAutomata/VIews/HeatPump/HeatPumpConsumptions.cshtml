@@ -1,0 +1,57 @@
+﻿@using System.Globalization
+@model HeatPumpConsumptionsVM
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <h1>ΚΑΤΑΝΑΛΩΣΕΙΣ ΑΝΤΛΙΑΣ</h1>
+            </div>
+            <div class="col-md-6">
+                <a asp-action="AddConsumption" class="btn btn-primary float-right"><i class="fas fa-plus-square"></i> ΝΕΑ ΚΑΤΑΝΑΛΩΣΗ</a>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<section class="content">
+    <div class="card card-primary card-outline">
+        <div class="card-body">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>ΗΜΕΡΟΜΗΝΙΑ</th>
+                        <th>Kwh</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Consumptions?.Any() == true)
+                    {
+                        @foreach (var consumption in Model.Consumptions)
+                        {
+                            <tr>
+                                <td>@consumption.Date.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                <td>@consumption.Kwh.ToString("N", CultureInfo.CreateSpecificCulture("el-GR"))</td>
+                                <td><a asp-action="UpdateConsumption" asp-route-id="@consumption.Id" class="btn btn-default btn-sm"><i class="fas fa-edit"></i> ΜΕΤΑΒΟΛΗ</a></td>
+                                <td><a asp-action="DeleteConsumption" asp-route-id="@consumption.Id" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i> ΔΙΑΓΡΑΦΗ</a></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <!-- DataTables -->
+    <script src="~/lib/admin-lte/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/lib/admin-lte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/app.datatables.js"></script>
+}

@@ -87,6 +87,23 @@ namespace HomeAutomata.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("HomeAutomata.Core.Domain.HeatPumpModels.HeatPumpConsumption", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<double>("Kwh")
+                        .HasColumnType("double");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HeatPumpConsumption");
+                });
+
             modelBuilder.Entity("HomeAutomata.Core.Domain.HeatPumpModels.HeatPumpTemp", b =>
                 {
                     b.Property<int>("Id")

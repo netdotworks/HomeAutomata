@@ -34,10 +34,10 @@ namespace HomeAutomata
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDbContext>(o =>
-                o.UseMySql(
-                    Configuration.GetConnectionString("DefaultConnection"),
-                    sql => sql.ServerVersion(new ServerVersion(new Version(10, 3, 22), ServerType.MariaDb))));
+            //services.AddDbContext<AppDbContext>(o =>
+            //    o.UseMySql(
+            //        Configuration.GetConnectionString("DefaultConnection"),
+            //        sql => sql.ServerVersion(new ServerVersion(new Version(10, 3, 22), ServerType.MariaDb))));
 
             if (Environment.IsDevelopment())
             {
@@ -79,6 +79,7 @@ namespace HomeAutomata
 
             services.AddScoped<ILogOutsideWeatherJob, LogOutsideWeatherJob>();
             services.AddScoped<IHeatPumpService, HeatPumpService>();
+            services.AddScoped<IHeatPumpConsumptionService, HeatPumpConsumptionService>();
 
             services.AddHangfireServer();
 
@@ -92,6 +93,8 @@ namespace HomeAutomata
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseStaticFiles();
 
             app.UseRouting();
 
